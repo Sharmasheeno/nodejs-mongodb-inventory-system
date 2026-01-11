@@ -1,25 +1,19 @@
 const express = require('express');
-const dotenv = require('dotenv');
-const productRoutes = require('./routes/productRoutes');
-
-dotenv.config();
+const connectDB = require('./config/db');
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.json());
+// Connect Database
+connectDB();
 
-// Routes
-app.use('/api/products', productRoutes);
+// Init Middleware
+app.use(express.json({ extended: false }));
 
-// Global Error Handler
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong!' });
-});
+// Define Routes
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/inventory', require('./routes/inventoryRoutes'));
 
-// Start Server
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

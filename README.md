@@ -1,10 +1,16 @@
-# Node.js Express & MySQL2 MVC CRUD
+# Inventory Management System
 
-A robust RESTful API building a Product Management System. Implemented using Node.js, Express, and MySQL2, featuring a strict MVC architecture, connection pooling, and secure prepared statements.
+A Node.js RESTful API for managing inventory, featuring MongoDB integration and JWT Authentication.
 
-## Requirements
-- Node.js installed
-- MySQL Server installed and running
+## Features
+- **Authentication**: User registration and login with JWT.
+- **Inventory CRUD**: Create, Read, Update, Delete inventory items.
+- **Secure**: Password hashing (bcrypt) and protected routes.
+
+## Tech Stack
+- Node.js & Express
+- MongoDB & Mongoose
+- JSON Web Token (JWT)
 
 ## Setup
 
@@ -13,27 +19,29 @@ A robust RESTful API building a Product Management System. Implemented using Nod
     npm install
     ```
 
-2.  **Database Configuration**
-    - Create a database named `crud_db` in your MySQL server.
-    - Run the SQL commands in `schema.sql` to create the `products` table.
-    - **IMPORTANT**: Open the `.env` file and update `DB_PASSWORD` (and other fields if necessary) with your MySQL credentials.
-
-3.  **Run the Application**
-    - For development (with auto-restart):
-      ```bash
-      npm run dev
+2.  **Configuration**
+    - Ensure MongoDB is running on `mongodb://localhost:27017`
+    - Create a `.env` file (if not exists) with:
       ```
-    - For production:
-      ```bash
-      npm start
+      PORT=5000
+      MONGO_URI=mongodb://localhost:27017/inventory_db
+      JWT_SECRET=your_jwt_secret
       ```
 
-## API Endpoints (`/api/products`)
+3.  **Run API**
+    ```bash
+    npm run dev
+    ```
 
-| Method | Endpoint | Description | Body Params |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/` | Get all products | None |
-| `GET` | `/:id` | Get product by ID | None |
-| `POST` | `/` | Create a new product | `name`, `price`, `description` (optional) |
-| `PUT` | `/:id` | Update a product | `name`, `price`, `description` |
-| `DELETE` | `/:id` | Delete a product | None |
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register a new user (`username`, `password`)
+- `POST /api/auth/login` - Login and get token (`username`, `password`)
+
+### Inventory (Requires Token for Write Ops)
+- `GET /api/inventory` - List all items
+- `GET /api/inventory/:id` - Get item details
+- `POST /api/inventory` - Add item (Header: `x-auth-token: <token>`)
+- `PUT /api/inventory/:id` - Update item
+- `DELETE /api/inventory/:id` - Delete item
